@@ -176,21 +176,21 @@
       <div class="step-num">3</div>
       <div class="step-body">
         <h2>Befehl ausführen</h2>
-        <p>Wechsle zum Klarna-Tab. Klicke ins Konsoleneingabefeld und stelle sicher, dass es leer ist. Dann:</p>
+        <p>Wechsle zum Klarna-Tab und kopiere den passenden Befehl in die Konsole:</p>
 
-        <p style="margin-top:12px;"><strong>Chrome:</strong></p>
-        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:6px;">
+        <p style="margin-top:14px;font-size:13px;font-weight:700;color:#555;">Chrome</p>
+        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:4px;">
           <code style="color:#ffb3c7;font-family:monospace;font-size:13px;flex:1;">copy(localStorage['@KLAPP:signIn:refreshToken'])</code>
-          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;" onclick="copyCmd('chrome')">Kopieren</button>
+          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;flex-shrink:0;" onclick="copyCmd('chrome')">Kopieren</button>
         </div>
-        <p style="font-size:13px;color:#888;margin-top:6px;">Drücke Enter → <code>undefined</code> als Ausgabe ist normal → Token ist in der Zwischenablage.</p>
+        <p style="font-size:13px;color:#aaa;margin-top:5px;">Enter drücken — Ausgabe <code style="background:#f0f0f5;padding:1px 5px;border-radius:4px;font-size:11px;">undefined</code> ist normal, Token ist jetzt in der Zwischenablage.</p>
 
-        <p style="margin-top:14px;"><strong>Safari:</strong></p>
-        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:6px;">
+        <p style="margin-top:16px;font-size:13px;font-weight:700;color:#555;">Safari</p>
+        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:4px;">
           <code style="color:#ffb3c7;font-family:monospace;font-size:13px;flex:1;">prompt('',localStorage['@KLAPP:signIn:refreshToken'])</code>
-          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;" onclick="copyCmd('safari')">Kopieren</button>
+          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;flex-shrink:0;" onclick="copyCmd('safari')">Kopieren</button>
         </div>
-        <p style="font-size:13px;color:#888;margin-top:6px;">Drücke Enter → Fenster öffnet sich → <kbd>Cmd</kbd>+<kbd>A</kbd> → <kbd>Cmd</kbd>+<kbd>C</kbd> → Fenster schließen.</p>
+        <p style="font-size:13px;color:#aaa;margin-top:5px;">Enter drücken → Dialogfenster öffnet sich → <kbd>Cmd</kbd>+<kbd>A</kbd> → <kbd>Cmd</kbd>+<kbd>C</kbd> → Fenster schließen.</p>
 
         <button class="btn btn-pink" style="margin-top:14px;" onclick="completeStep(3)">✓ Befehl ausgeführt</button>
       </div>
