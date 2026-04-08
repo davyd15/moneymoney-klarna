@@ -1,8 +1,11 @@
 -- ============================================================
 -- MoneyMoney Web Banking Extension
 -- Klarna DE – Klarna App
--- Version: 5.18
+-- Version: 5.19
 --
+-- Changes in 5.19:
+--  - Fix: challenge dialog response arrives in credentials[1], not credentials[2]
+--  - Fix: use prompt() in SETUP_HELP/RENEW_HELP instead of async clipboard API
 -- Changes in 5.18:
 --  - Simplified token setup: GitHub Pages guide URL shown in dialog
 --  - Bookmarklet + console copy-button available at setup URL
@@ -14,7 +17,7 @@
 -- ============================================================
 
 WebBanking {
-  version     = 5.18,
+  version     = 5.19,
   url         = "https://app.klarna.com",
   services    = {"Klarna"},
   description = "Klarna – alle Zahlungen, Karte & Konto in einer Übersicht\n\n" ..
@@ -292,8 +295,10 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
   end
 
   -- ── Step 2: validate and authenticate with the submitted token ────────────
+  -- Note: in MoneyMoney, the challenge dialog response arrives in credentials[1],
+  -- not credentials[2] (which keeps the original account password unchanged).
   if step == 2 then
-    local token = password
+    local token = (credentials[1] or ""):match("^%s*(.-)%s*$")
     if not isValidToken(token) then
       return "Ungültiger Token.\n\n" ..
              "Der Token muss mit 'krn:login:' beginnen.\n" ..
@@ -312,7 +317,8 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
 
     accessToken = newAccess
     setupConnection()
-    if username ~= "" then LocalStorage.username = username end
+    -- Do not overwrite stored username here: in step 2 credentials[1] contains
+    -- the challenge response (token), not the phone number.
     MM.printStatus("Klarna: angemeldet")
     return nil
   end
