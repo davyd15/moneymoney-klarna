@@ -51,16 +51,14 @@ local APP_HEADERS = {
 local SETUP_HELP =
   "Anleitung mit Kopier-Button:\n" ..
   "  " .. SETUP_URL .. "\n\n" ..
-  "Oder manuell (1 Min.):\n" ..
-  "1. app.klarna.com oeffnen (bereits eingeloggt)\n" ..
-  "2. Konsole: Cmd + Alt + I  ->  Tab 'Konsole'\n" ..
+  "Oder manuell:\n" ..
+  "1. app.klarna.com oeffnen (eingeloggt)\n" ..
+  "2. Konsole: Cmd+Alt+J (Chrome) / Cmd+Alt+C (Safari)\n" ..
   "3. Befehl eingeben und Enter druecken:\n\n" ..
-  "   (async()=>{const t=localStorage[\n" ..
-  "   '@KLAPP:signIn:refreshToken'];\n" ..
-  "   await navigator.clipboard.writeText(t);\n" ..
-  "   alert('Token kopiert!')})()\n\n" ..
-  "4. Meldung erscheint -> Token in Zwischenablage\n" ..
-  "   Hier einfuegen: Cmd+V"
+  "   prompt('',localStorage[\n" ..
+  "     '@KLAPP:signIn:refreshToken'])\n\n" ..
+  "4. Fenster erscheint: Cmd+A dann Cmd+C dann Abbrechen\n" ..
+  "5. Hier einfuegen: Cmd+V"
 
 local RENEW_HELP =
   "Dein Klarna-Token ist abgelaufen.\n\n" .. SETUP_HELP
