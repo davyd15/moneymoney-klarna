@@ -55,9 +55,9 @@ local SETUP_HELP =
   "1. app.klarna.com oeffnen (bereits eingeloggt)\n" ..
   "2. Konsole: Cmd + Alt + I  ->  Tab 'Konsole'\n" ..
   "3. Befehl eingeben und Enter druecken:\n\n" ..
-  "   copy(localStorage.getItem(\n" ..
+  "   prompt('',localStorage.getItem(\n" ..
   "     '@KLAPP:signIn:refreshToken'))\n\n" ..
-  "4. Token in Zwischenablage -> hier einfuegen: Cmd+V"
+  "4. Fenster erscheint: Cmd+A, Cmd+C -> hier einfuegen: Cmd+V"
 
 local RENEW_HELP =
   "Dein Klarna-Token ist abgelaufen.\n\n" .. SETUP_HELP

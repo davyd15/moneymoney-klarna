@@ -176,13 +176,14 @@
       <div class="step-num">3</div>
       <div class="step-body">
         <h2>Befehl kopieren &amp; einfügen</h2>
-        <p>Klicke auf „Kopieren", wechsle zur Konsole, füge ein (<kbd>Cmd</kbd> + <kbd>V</kbd>) und drücke <kbd>Enter</kbd>.</p>
+        <p>Klicke auf „Befehl kopieren", wechsle zur Konsole, füge ein (<kbd>Cmd</kbd> + <kbd>V</kbd>) und drücke <kbd>Enter</kbd>. Ein Fenster öffnet sich mit dem Token → <kbd>Cmd</kbd> + <kbd>A</kbd> → <kbd>Cmd</kbd> + <kbd>C</kbd>.</p>
         <button class="btn btn-dark" id="copyBtn" onclick="copyCommand()">
           📋 Befehl kopieren
         </button>
         <div class="note" id="copyNote" style="display:none">
-          ✓ Kopiert! Wechsle jetzt zum Klarna-Tab, klicke in die Konsole,
-          drücke <kbd>Cmd</kbd> + <kbd>V</kbd> und dann <kbd>Enter</kbd>.
+          ✓ Befehl kopiert! Wechsle zum Klarna-Tab, klicke in die Konsole,
+          drücke <kbd>Cmd</kbd> + <kbd>V</kbd> dann <kbd>Enter</kbd>.<br><br>
+          Ein Fenster öffnet sich mit deinem Token → <kbd>Cmd</kbd> + <kbd>A</kbd> → <kbd>Cmd</kbd> + <kbd>C</kbd>.
         </div>
       </div>
     </div>
@@ -244,7 +245,7 @@
   }
 
   function copyCommand() {
-    var cmd = "copy(localStorage.getItem('@KLAPP:signIn:refreshToken'))";
+    var cmd = "prompt('',localStorage.getItem('@KLAPP:signIn:refreshToken'))";
     var btn = document.getElementById('copyBtn');
     var note = document.getElementById('copyNote');
 
