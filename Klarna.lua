@@ -17,10 +17,10 @@ WebBanking {
   version     = 5.18,
   url         = "https://app.klarna.com",
   services    = {"Klarna"},
-  description = "Klarna – all payments, card & account in one view\n\n" ..
-                "Username: phone number (+4916012345678)\n" ..
-                "Password: leave blank\n\n" ..
-                "You will be guided through the one-time setup on first run."
+  description = "Klarna – alle Zahlungen, Karte & Konto in einer Übersicht\n\n" ..
+                "Benutzername: Handynummer (+4916012345678)\n" ..
+                "Passwort:     leer lassen\n\n" ..
+                "Beim ersten Start wirst du durch die Einrichtung gefuehrt."
 }
 
 -- ── Constants ─────────────────────────────────────────────────────────────────
@@ -46,21 +46,21 @@ local APP_HEADERS = {
 }
 
 -- Setup instructions shown in the MoneyMoney dialog.
--- The URL is short enough to type from the dialog and leads to a
--- step-by-step guide with a one-click copy button and bookmarklet.
+-- The URL is placed first so it is always visible without scrolling.
+-- It leads to a step-by-step guide with a one-click copy button and bookmarklet.
 local SETUP_HELP =
-  "Setup guide with copy button:\n" ..
+  "Anleitung mit Kopier-Button:\n" ..
   "  " .. SETUP_URL .. "\n\n" ..
-  "Or manually (1 min.):\n" ..
-  "1. Open app.klarna.com (already logged in)\n" ..
-  "2. Open console: Cmd + Alt + I -> 'Console'\n" ..
-  "3. Enter this command and press Enter:\n\n" ..
+  "Oder manuell (1 Min.):\n" ..
+  "1. app.klarna.com oeffnen (bereits eingeloggt)\n" ..
+  "2. Konsole: Cmd + Alt + I  ->  Tab 'Konsole'\n" ..
+  "3. Befehl eingeben und Enter druecken:\n\n" ..
   "   copy(localStorage.getItem(\n" ..
   "     '@KLAPP:signIn:refreshToken'))\n\n" ..
-  "4. Token is in clipboard -> paste here: Cmd+V"
+  "4. Token in Zwischenablage -> hier einfuegen: Cmd+V"
 
 local RENEW_HELP =
-  "Your Klarna token has expired.\n\n" .. SETUP_HELP
+  "Dein Klarna-Token ist abgelaufen.\n\n" .. SETUP_HELP
 
 local connection  = nil
 local accessToken = nil
@@ -245,7 +245,7 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
       local savedAccess = LocalStorage.accessToken
       if savedAccess and savedExpiry and
          os.time() < (tonumber(savedExpiry) - 60) then
-        MM.printStatus("Klarna: cached session active")
+        MM.printStatus("Klarna: gespeicherte Session aktiv")
         accessToken = savedAccess
         setupConnection()
         if username ~= "" then LocalStorage.username = username end
@@ -253,13 +253,13 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
       end
 
       -- Fetch a new access token via the stored refresh token.
-      MM.printStatus("Klarna: authenticating...")
+      MM.printStatus("Klarna: authentifiziere...")
       local newAccess = doRefresh(refreshToken)
       if newAccess then
         accessToken = newAccess
         setupConnection()
         if username ~= "" then LocalStorage.username = username end
-        MM.printStatus("Klarna: signed in")
+        MM.printStatus("Klarna: angemeldet")
         return nil
       end
 
@@ -268,25 +268,25 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
       LocalStorage.tokenExpiry  = nil
       LocalStorage.refreshToken = nil
       if not interactive then
-        return "Klarna: token expired. Please bring MoneyMoney to the " ..
-               "foreground and refresh the account."
+        return "Klarna: Token abgelaufen. Bitte MoneyMoney in den " ..
+               "Vordergrund bringen und Konto erneut aktualisieren."
       end
       return {
-        title     = "Klarna: renew token",
+        title     = "Klarna: Token erneuern",
         challenge = RENEW_HELP,
-        label     = "Paste token here (Cmd+V):",
+        label     = "Token einfuegen (Cmd+V)",
       }
     end
 
     -- No token at all -> first-time setup.
     if not interactive then
-      return "Klarna: please bring MoneyMoney to the foreground and " ..
-             "refresh the account."
+      return "Klarna: Bitte MoneyMoney in den Vordergrund bringen und " ..
+             "Konto erneut aktualisieren."
     end
     return {
-      title     = "Set up Klarna",
+      title     = "Klarna einrichten",
       challenge = SETUP_HELP,
-      label     = "Paste token here (Cmd+V):",
+      label     = "Token einfuegen (Cmd+V)",
     }
   end
 
@@ -294,35 +294,35 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
   if step == 2 then
     local token = password
     if not isValidToken(token) then
-      return "Invalid token.\n\n" ..
-             "The token must start with 'krn:login:'.\n" ..
-             "Please check your input and try again."
+      return "Ungültiger Token.\n\n" ..
+             "Der Token muss mit 'krn:login:' beginnen.\n" ..
+             "Bitte Eingabe prüfen und erneut versuchen."
     end
 
-    MM.printStatus("Klarna: authenticating with new token...")
+    MM.printStatus("Klarna: authentifiziere...")
     local newAccess = doRefresh(token)
     if not newAccess then
-      return "Klarna: authentication failed.\n\n" ..
-             "Please check:\n" ..
-             "- Was the token copied completely?\n" ..
-             "- Are you still signed in to app.klarna.com?\n\n" ..
-             "Visit " .. SETUP_URL .. " for the setup guide."
+      return "Klarna: Authentifizierung fehlgeschlagen.\n\n" ..
+             "Bitte prüfen:\n" ..
+             "- Wurde der Token vollständig kopiert?\n" ..
+             "- Bist du noch auf app.klarna.com eingeloggt?\n\n" ..
+             "Anleitung: " .. SETUP_URL
     end
 
     accessToken = newAccess
     setupConnection()
     if username ~= "" then LocalStorage.username = username end
-    MM.printStatus("Klarna: signed in")
+    MM.printStatus("Klarna: angemeldet")
     return nil
   end
 
-  return "Klarna: unknown authentication step."
+  return "Klarna: unbekannter Authentifizierungsschritt."
 end
 
 -- ── ListAccounts ──────────────────────────────────────────────────────────────
 
 function ListAccounts(knownAccounts)
-  local owner = "Klarna User"
+  local owner = "Klarna Nutzer"
   local profileResp = appGet("/de/api/shopping_vault_bff/v1/accounts")
   if profileResp and profileResp.name then
     local g = profileResp.name.givenName  or ""
@@ -368,7 +368,7 @@ function RefreshAccount(account, since)
   local storedRefresh = LocalStorage.refreshToken
   if storedExpiry and os.time() >= (tonumber(storedExpiry) - 30) and
      isValidToken(storedRefresh) then
-    MM.printStatus("Klarna: refreshing access token...")
+    MM.printStatus("Klarna: Token erneuern...")
     local newAccess = doRefresh(storedRefresh)
     if newAccess then accessToken = newAccess end
   end
@@ -573,5 +573,5 @@ end
 
 function EndSession()
   connection = nil
-  MM.printStatus("Klarna: signed out")
+  MM.printStatus("Klarna: abgemeldet")
 end
