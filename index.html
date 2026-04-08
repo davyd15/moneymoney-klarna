@@ -176,21 +176,23 @@
       <div class="step-num">3</div>
       <div class="step-body">
         <h2>Befehl ausführen</h2>
-        <p>
-          Klicke „Befehl kopieren", wechsle zum Klarna-Tab,
-          klicke in die Konsole, drücke <kbd>Cmd</kbd> + <kbd>V</kbd>
-          und dann <kbd>Enter</kbd>.
-        </p>
-        <button class="btn btn-dark" id="copyBtn" onclick="copyCommand()">
-          📋 Befehl kopieren
-        </button>
-        <div class="note" id="copyNote" style="display:none">
-          ✓ Befehl kopiert!<br><br>
-          Wechsle jetzt zum <strong>Klarna-Tab</strong>, klicke in die Konsole,
-          drücke <kbd>Cmd</kbd> + <kbd>V</kbd> dann <kbd>Enter</kbd>.<br><br>
-          <strong>Eine Meldung erscheint wenn der Token bereit ist.</strong>
-          Danach geht es mit Schritt 4 weiter.
+        <p>Wechsle zum Klarna-Tab. Klicke ins Konsoleneingabefeld und stelle sicher, dass es leer ist. Dann:</p>
+
+        <p style="margin-top:12px;"><strong>Chrome:</strong></p>
+        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:6px;">
+          <code style="color:#ffb3c7;font-family:monospace;font-size:13px;flex:1;">copy(localStorage['@KLAPP:signIn:refreshToken'])</code>
+          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;" onclick="copyCmd('chrome')">Kopieren</button>
         </div>
+        <p style="font-size:13px;color:#888;margin-top:6px;">Drücke Enter → <code>undefined</code> als Ausgabe ist normal → Token ist in der Zwischenablage.</p>
+
+        <p style="margin-top:14px;"><strong>Safari:</strong></p>
+        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:6px;">
+          <code style="color:#ffb3c7;font-family:monospace;font-size:13px;flex:1;">prompt('',localStorage['@KLAPP:signIn:refreshToken'])</code>
+          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;" onclick="copyCmd('safari')">Kopieren</button>
+        </div>
+        <p style="font-size:13px;color:#888;margin-top:6px;">Drücke Enter → Fenster öffnet sich → <kbd>Cmd</kbd>+<kbd>A</kbd> → <kbd>Cmd</kbd>+<kbd>C</kbd> → Fenster schließen.</p>
+
+        <button class="btn btn-pink" style="margin-top:14px;" onclick="completeStep(3)">✓ Befehl ausgeführt</button>
       </div>
     </div>
 
@@ -250,33 +252,19 @@
     }
   }
 
-  function copyCommand() {
-    // This command runs IN the Klarna browser console.
-    // It writes the token directly to the clipboard and shows a confirmation alert.
-    // Fallback: if clipboard API is blocked, shows a prompt so user can copy manually.
-    var cmd = "(async()=>{" +
-      "const t=localStorage['@KLAPP:signIn:refreshToken'];" +
-      "await navigator.clipboard.writeText(t);" +
-      "alert('\\u2713 Token kopiert! Wechsle zu MoneyMoney und druecke Cmd+V.')" +
-      "})().catch(()=>prompt('Token \u2013 Cmd+A, Cmd+C:',localStorage['@KLAPP:signIn:refreshToken']))";
-    var btn = document.getElementById('copyBtn');
-    var note = document.getElementById('copyNote');
+  var commands = {
+    chrome: "copy(localStorage['@KLAPP:signIn:refreshToken'])",
+    safari: "prompt('',localStorage['@KLAPP:signIn:refreshToken'])"
+  };
 
-    (navigator.clipboard
-      ? navigator.clipboard.writeText(cmd)
-      : Promise.reject()
-    ).catch(function() {
+  function copyCmd(browser) {
+    var cmd = commands[browser];
+    (navigator.clipboard ? navigator.clipboard.writeText(cmd) : Promise.reject())
+    .catch(function() {
       var ta = document.createElement('textarea');
       ta.value = cmd; document.body.appendChild(ta);
       ta.select(); document.execCommand('copy');
       document.body.removeChild(ta);
-      return Promise.resolve();
-    }).then(function() {
-      btn.textContent = '✓ Kopiert!';
-      btn.classList.remove('btn-dark');
-      btn.classList.add('btn-green');
-      note.style.display = 'block';
-      completeStep(3);
     });
   }
 
