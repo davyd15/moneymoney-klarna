@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Klarna für MoneyMoney einrichten</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: #fdf0f4;
+      color: #1a0010;
+      min-height: 100vh;
+      padding: 24px 16px 48px;
+    }
+
+    .page { max-width: 600px; margin: 0 auto; }
+
+    /* ── Header ── */
+    header { text-align: center; padding: 32px 0 28px; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #FFB3C7; border-radius: 16px;
+      padding: 10px 20px; margin-bottom: 20px;
+      font-size: 22px; font-weight: 800; color: #7a0030; letter-spacing: -0.5px;
+    }
+    header h1 { font-size: 22px; font-weight: 700; color: #1a0010; }
+    header p  { color: #888; margin-top: 6px; font-size: 15px; }
+
+    /* ── Cards ── */
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 16px rgba(150,0,60,0.07);
+    }
+
+    .badge {
+      display: inline-block;
+      background: #FFB3C7; color: #7a0030;
+      font-size: 11px; font-weight: 700;
+      padding: 3px 10px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.6px;
+      margin-bottom: 12px;
+    }
+    .badge.alt { background: #e8e8f0; color: #555; }
+
+    .card h2 { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+    .card .sub { font-size: 14px; color: #888; margin-bottom: 20px; }
+
+    /* ── Steps ── */
+    ol.steps { list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 14px; }
+    ol.steps li {
+      counter-increment: s;
+      display: flex; gap: 14px; align-items: flex-start;
+      font-size: 15px; line-height: 1.5;
+    }
+    ol.steps li::before {
+      content: counter(s);
+      min-width: 26px; height: 26px;
+      background: #FFB3C7; color: #7a0030;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 800; flex-shrink: 0; margin-top: 1px;
+    }
+    ol.steps li strong { color: #1a0010; }
+    ol.steps li a { color: #c0004a; }
+    ol.steps li .kbd {
+      display: inline-block;
+      background: #f0f0f5; color: #333;
+      border: 1px solid #ccc; border-bottom: 2px solid #bbb;
+      border-radius: 5px; padding: 1px 7px;
+      font-size: 13px; font-family: inherit;
+    }
+
+    /* ── Bookmarklet ── */
+    .bookmarklet-wrap { text-align: center; padding: 4px 0 12px; }
+    .bookmarklet-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #FFB3C7 0%, #ff85ab 100%);
+      color: #7a0030;
+      padding: 14px 28px;
+      border-radius: 14px;
+      font-size: 16px; font-weight: 800;
+      text-decoration: none;
+      cursor: grab;
+      border: 2px dashed #ff69a5;
+      transition: transform 0.15s, box-shadow 0.15s;
+      user-select: none;
+    }
+    .bookmarklet-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(200,0,80,0.18);
+    }
+    .drag-hint {
+      font-size: 13px; color: #aaa; margin-top: 10px;
+    }
+    .drag-hint strong { color: #888; }
+
+    /* ── Command box ── */
+    .cmd-box {
+      background: #1a0a12;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex; align-items: center; gap: 12px;
+      margin: 12px 0;
+    }
+    .cmd-box code {
+      color: #ffb3c7;
+      font-family: "SF Mono", "Menlo", "Monaco", monospace;
+      font-size: 13px; flex: 1;
+      word-break: break-all; line-height: 1.5;
+    }
+    .copy-btn {
+      background: #FFB3C7; color: #7a0030;
+      border: none; padding: 8px 16px;
+      border-radius: 9px; font-size: 13px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+      transition: background 0.15s, transform 0.1s;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover  { background: #ff85ab; transform: scale(1.03); }
+    .copy-btn.ok     { background: #b8f0c8; color: #1a6a30; }
+
+    /* ── Divider ── */
+    .or {
+      text-align: center; color: #ccc; font-size: 13px;
+      position: relative; margin: 4px 0 4px;
+    }
+    .or::before, .or::after {
+      content: ''; position: absolute; top: 50%;
+      width: 44%; height: 1px; background: #eee;
+    }
+    .or::before { left: 0; } .or::after { right: 0; }
+
+    footer {
+      text-align: center; color: #ccc;
+      font-size: 12px; padding-top: 28px;
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="logo">🛍 Klarna</div>
+    <h1>Klarna für MoneyMoney einrichten</h1>
+    <p>Einmalig – dauert etwa 1 Minute</p>
+  </header>
+
+  <!-- ── Option 1: Bookmarklet ─────────────────────────────────────── -->
+  <div class="card">
+    <span class="badge">Empfohlen</span>
+    <h2>Variante 1 – Bookmarklet</h2>
+    <p class="sub">Einmal installieren, dann immer per Klick abrufen.</p>
+
+    <ol class="steps">
+      <li>
+        <div>
+          Ziehe diesen Button in deine <strong>Lesezeichenleiste</strong>:
+          <div class="bookmarklet-wrap">
+            <a class="bookmarklet-btn" id="bm" href="#">🔑 Klarna Token holen</a>
+            <p class="drag-hint">
+              Lesezeichenleiste einblenden:
+              <strong>Chrome / Safari → <span class="kbd">Cmd</span> + <span class="kbd">Shift</span> + <span class="kbd">B</span></strong>
+            </p>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          Gehe zu <a href="https://app.klarna.com" target="_blank"><strong>app.klarna.com</strong></a>
+          – du bist dort vermutlich schon eingeloggt.
+        </div>
+      </li>
+      <li>
+        <div>
+          Klicke in der Lesezeichenleiste auf <strong>„Klarna Token holen"</strong>.
+        </div>
+      </li>
+      <li>
+        <div>
+          Ein Fenster erscheint mit deinem Token.
+          Markiere alles (<span class="kbd">Cmd</span> + <span class="kbd">A</span>)
+          und kopiere (<span class="kbd">Cmd</span> + <span class="kbd">C</span>).
+        </div>
+      </li>
+      <li>
+        <div>
+          Wechsle zurück zu <strong>MoneyMoney</strong> und füge den Token ein
+          (<span class="kbd">Cmd</span> + <span class="kbd">V</span>).
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <div class="or">oder</div>
+
+  <!-- ── Option 2: Konsole ──────────────────────────────────────────── -->
+  <div class="card">
+    <span class="badge alt">Alternative</span>
+    <h2>Variante 2 – Browser-Konsole</h2>
+    <p class="sub">Kein Bookmarklet nötig, funktioniert genauso.</p>
+
+    <ol class="steps">
+      <li>
+        <div>
+          Gehe zu <a href="https://app.klarna.com" target="_blank"><strong>app.klarna.com</strong></a>.
+        </div>
+      </li>
+      <li>
+        <div>
+          Öffne die Entwicklertools:
+          <span class="kbd">Cmd</span> + <span class="kbd">Alt</span> + <span class="kbd">I</span>
+          → klicke oben auf den Tab <strong>„Konsole"</strong>.
+        </div>
+      </li>
+      <li>
+        <div>
+          Klicke auf <strong>Kopieren</strong>, füge den Befehl in die Konsole ein
+          (<span class="kbd">Cmd</span> + <span class="kbd">V</span>)
+          und drücke <span class="kbd">Enter</span>:
+          <div class="cmd-box">
+            <code>copy(localStorage.getItem('@KLAPP:signIn:refreshToken'))</code>
+            <button class="copy-btn" onclick="copyCmd(this)">Kopieren</button>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          Der Token ist jetzt in deiner Zwischenablage.
+          Wechsle zu <strong>MoneyMoney</strong> und füge ihn ein
+          (<span class="kbd">Cmd</span> + <span class="kbd">V</span>).
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <footer>
+    <a href="https://github.com/davyd15/moneymoney-klarna" style="color:#aaa;">davyd15/moneymoney-klarna</a>
+    &nbsp;·&nbsp; Der Token erneuert sich danach automatisch bei jedem Sync.
+  </footer>
+
+</div>
+<script>
+  // Bookmarklet: prompt() zeigt den Token in einem kopierbaren Textfeld
+  var js = "(function(){" +
+    "var t=localStorage.getItem('@KLAPP:signIn:refreshToken');" +
+    "if(t){prompt('Klarna Token \\u2013 Cmd+A dann Cmd+C:',t);}" +
+    "else{alert('Token nicht gefunden.\\nBitte sicherstellen, dass du auf app.klarna.com eingeloggt bist.');}" +
+    "})();";
+  document.getElementById('bm').href = 'javascript:' + js;
+
+  // Kopieren-Button
+  function copyCmd(btn) {
+    var cmd = "copy(localStorage.getItem('@KLAPP:signIn:refreshToken'))";
+    (navigator.clipboard
+      ? navigator.clipboard.writeText(cmd)
+      : Promise.reject()
+    ).catch(function() {
+      var ta = document.createElement('textarea');
+      ta.value = cmd;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }).then(function() {
+      btn.textContent = '✓ Kopiert!';
+      btn.classList.add('ok');
+      setTimeout(function() {
+        btn.textContent = 'Kopieren';
+        btn.classList.remove('ok');
+      }, 2500);
+    });
+  }
+</script>
+</body>
+</html>
