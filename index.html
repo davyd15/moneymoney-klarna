@@ -259,13 +259,16 @@
 
   function copyCmd(browser) {
     var cmd = commands[browser];
-    (navigator.clipboard ? navigator.clipboard.writeText(cmd) : Promise.reject())
-    .catch(function() {
-      var ta = document.createElement('textarea');
-      ta.value = cmd; document.body.appendChild(ta);
-      ta.select(); document.execCommand('copy');
-      document.body.removeChild(ta);
-    });
+    // Use only execCommand – avoids navigator.clipboard permission issues
+    var ta = document.createElement('textarea');
+    ta.value = cmd;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
   }
 
   updateProgress();
