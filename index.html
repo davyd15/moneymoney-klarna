@@ -176,26 +176,26 @@
       <div class="step-num">3</div>
       <div class="step-body">
         <h2>Befehl ausführen</h2>
-        <p>Wechsle zum Klarna-Tab und kopiere den passenden Befehl in die Konsole:</p>
+        <p>Wechsle zum Klarna-Tab und füge den Befehl in die Konsole ein:</p>
 
-        <p style="margin-top:14px;font-size:13px;font-weight:700;color:#555;">Chrome</p>
-        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:4px;">
-          <code style="color:#ffb3c7;font-family:monospace;font-size:13px;flex:1;">copy(localStorage['@KLAPP:signIn:refreshToken'])</code>
-          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;flex-shrink:0;" onclick="copyCmd('chrome')">Kopieren</button>
+        <!-- Browser tabs -->
+        <div style="display:flex;gap:6px;margin-top:14px;">
+          <button id="tab-chrome" onclick="switchBrowser('chrome')"
+            style="padding:5px 14px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:#ffb3c7;color:#7a0030;">Chrome</button>
+          <button id="tab-safari" onclick="switchBrowser('safari')"
+            style="padding:5px 14px;border-radius:20px;border:none;font-size:13px;font-weight:700;cursor:pointer;background:#f0e0e8;color:#999;">Safari</button>
         </div>
-        <p style="font-size:13px;color:#aaa;margin-top:5px;">Enter drücken — Ausgabe <code style="background:#f0f0f5;padding:1px 5px;border-radius:4px;font-size:11px;">undefined</code> ist normal.</p>
 
-        <p style="margin-top:16px;font-size:13px;font-weight:700;color:#555;">Safari</p>
-        <div style="background:#1a0a12;border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px;margin-top:4px;">
-          <code style="color:#ffb3c7;font-family:monospace;font-size:13px;flex:1;">prompt('',localStorage['@KLAPP:signIn:refreshToken'])</code>
-          <button class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;flex-shrink:0;" onclick="copyCmd('safari')">Kopieren</button>
+        <!-- Code block -->
+        <div style="background:#1a0a12;border-radius:0 10px 10px 10px;padding:14px 14px 14px 14px;margin-top:0;display:flex;align-items:center;gap:10px;">
+          <code id="cmd-display" style="color:#ffb3c7;font-family:monospace;font-size:13px;flex:1;word-break:break-all;"></code>
+          <button id="copy-btn" class="btn btn-pink" style="padding:7px 14px;font-size:12px;margin-top:0;flex-shrink:0;" onclick="copyCmd(currentBrowser)">Kopieren</button>
         </div>
-        <p style="font-size:13px;color:#aaa;margin-top:5px;">
-          Enter drücken → Dialog öffnet sich<br>
-          → <kbd>Cmd</kbd>+<kbd>A</kbd> → <kbd>Cmd</kbd>+<kbd>C</kbd> → Fenster schließen
-        </p>
 
-        <button class="btn btn-pink" style="margin-top:14px;" onclick="completeStep(3)">✓ Befehl ausgeführt</button>
+        <!-- Hint -->
+        <p id="cmd-hint" style="font-size:13px;color:#aaa;margin-top:6px;line-height:1.6;"></p>
+
+        <button class="btn btn-pink" style="margin-top:10px;" onclick="completeStep(3)">✓ Befehl ausgeführt</button>
       </div>
     </div>
 
@@ -260,6 +260,29 @@
     safari: "prompt('',localStorage['@KLAPP:signIn:refreshToken'])"
   };
 
+  var hints = {
+    chrome: 'Enter drücken — Ausgabe <code style="background:#f0f0f5;padding:1px 5px;border-radius:4px;font-size:11px;">undefined</code> ist normal, Token ist in der Zwischenablage.',
+    safari: 'Enter drücken → Dialog öffnet sich → <kbd>Cmd</kbd>+<kbd>A</kbd> → <kbd>Cmd</kbd>+<kbd>C</kbd> → Fenster schließen'
+  };
+
+  var currentBrowser = 'chrome';
+
+  function switchBrowser(browser) {
+    currentBrowser = browser;
+    document.getElementById('cmd-display').textContent = commands[browser];
+    document.getElementById('cmd-hint').innerHTML = hints[browser];
+    var active   = { background: '#ffb3c7', color: '#7a0030' };
+    var inactive = { background: '#f0e0e8', color: '#999' };
+    var sel = browser === 'chrome' ? active : inactive;
+    var other = browser === 'chrome' ? inactive : active;
+    var tc = document.getElementById('tab-chrome');
+    var ts = document.getElementById('tab-safari');
+    tc.style.background = (browser === 'chrome') ? active.background : inactive.background;
+    tc.style.color      = (browser === 'chrome') ? active.color      : inactive.color;
+    ts.style.background = (browser === 'safari') ? active.background : inactive.background;
+    ts.style.color      = (browser === 'safari') ? active.color      : inactive.color;
+  }
+
   function copyCmd(browser) {
     var cmd = commands[browser];
     // Use only execCommand – avoids navigator.clipboard permission issues
@@ -275,6 +298,7 @@
   }
 
   updateProgress();
+  switchBrowser('chrome'); // initialise tab display
 </script>
 </body>
 </html>
