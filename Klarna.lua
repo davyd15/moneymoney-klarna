@@ -1,8 +1,12 @@
 -- ============================================================
 -- MoneyMoney Web Banking Extension
 -- Klarna DE – Klarna App
--- Version: 5.20
+-- Version: 5.23
 --
+-- Changes in 5.23:
+--  - UX: show GitHub repo URL in dialog (shorter, README links to guide)
+-- Changes in 5.22:
+--  - Fix: remove os.execute (sandboxed in MoneyMoney), restore inline instructions
 -- Changes in 5.20:
 --  - Polish: fix umlaut encoding in user-facing strings (öffnen, drücken, einfügen, geführt)
 --  - Polish: add https:// prefix to SETUP_URL constant
@@ -20,7 +24,7 @@
 -- ============================================================
 
 WebBanking {
-  version     = 5.20,
+  version     = 5.23,
   url         = "https://app.klarna.com",
   services    = {"Klarna"},
   description = "Klarna – alle Zahlungen, Karte & Konto in einer Übersicht\n\n" ..
@@ -38,7 +42,7 @@ local LOCALE      = "de-DE"
 local USERAGENT   = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) " ..
                     "AppleWebKit/537.36 (KHTML, like Gecko) " ..
                     "Chrome/124.0.0.0 Safari/537.36"
-local SETUP_URL   = "https://davyd15.github.io/moneymoney-klarna"
+local SETUP_URL   = "github.com/davyd15/moneymoney-klarna"
 
 local APP_HEADERS = {
   ["x-klarna-app-platform"]  = "web",
@@ -52,19 +56,16 @@ local APP_HEADERS = {
 }
 
 -- Setup instructions shown in the MoneyMoney dialog.
--- The URL is placed first so it is always visible without scrolling.
--- It leads to a step-by-step guide with a one-click copy button and bookmarklet.
 local SETUP_HELP =
-  "Anleitung mit Kopier-Button:\n" ..
-  "  " .. SETUP_URL .. "\n\n" ..
-  "Oder manuell:\n" ..
-  "1. app.klarna.com öffnen (eingeloggt)\n" ..
-  "2. Konsole: Cmd+Alt+J (Chrome) / Cmd+Alt+C (Safari)\n" ..
-  "3. Befehl eingeben und Enter drücken:\n\n" ..
-  "   prompt('',localStorage[\n" ..
-  "     '@KLAPP:signIn:refreshToken'])\n\n" ..
-  "4. Fenster erscheint: Cmd+A dann Cmd+C dann Abbrechen\n" ..
-  "5. Hier einfügen: Cmd+V"
+  "Anleitung mit Kopier-Button im GitHub-Repo:\n" ..
+  SETUP_URL .. "\n\n" ..
+  "Oder direkt in Chrome:\n" ..
+  "1. app.klarna.com oeffnen (eingeloggt)\n" ..
+  "2. Konsole: Cmd+Alt+J\n" ..
+  "3. Eingeben: copy(localStorage\n" ..
+  "   ['@KLAPP:signIn:refreshToken'])\n" ..
+  "4. Token ist in der Zwischenablage\n" ..
+  "5. Hier einfuegen: Cmd+V"
 
 local RENEW_HELP =
   "Dein Klarna-Token ist abgelaufen.\n\n" .. SETUP_HELP
@@ -293,7 +294,7 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
     return {
       title     = "Klarna einrichten",
       challenge = SETUP_HELP,
-      label     = "Token einfuegen (Cmd+V)",
+      label     = "Token einfügen (Cmd+V)",
     }
   end
 

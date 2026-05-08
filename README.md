@@ -124,6 +124,9 @@ After the initial setup, the token renews automatically on every sync. You will 
 
 | Version | Changes |
 |---------|---------|
+| 5.23 | Dialog now shows GitHub repo URL (shorter, README links to setup guide) |
+| 5.22 | Fix: remove `os.execute` call (sandboxed in MoneyMoney) |
+| 5.21 | Reverted — see 5.22 |
 | 5.20 | Polish: correct umlaut encoding in user-facing strings; add `https://` to setup URL |
 | 5.19 | Fix: token input from challenge dialog was read from wrong credentials slot; fix: use `prompt()` instead of async clipboard API in setup instructions |
 | 5.18 | Setup guide URL shown in dialog; bookmarklet + copy button at setup page |
