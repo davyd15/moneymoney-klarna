@@ -1,10 +1,10 @@
 -- ============================================================
 -- MoneyMoney Web Banking Extension
 -- Klarna DE – Klarna App
--- Version: 5.21
+-- Version: 5.22
 --
--- Changes in 5.21:
---  - UX: open setup guide automatically in browser when token is missing or expired
+-- Changes in 5.22:
+--  - Fix: remove os.execute (sandboxed in MoneyMoney), restore inline instructions
 -- Changes in 5.20:
 --  - Polish: fix umlaut encoding in user-facing strings (öffnen, drücken, einfügen, geführt)
 --  - Polish: add https:// prefix to SETUP_URL constant
@@ -22,7 +22,7 @@
 -- ============================================================
 
 WebBanking {
-  version     = 5.21,
+  version     = 5.22,
   url         = "https://app.klarna.com",
   services    = {"Klarna"},
   description = "Klarna – alle Zahlungen, Karte & Konto in einer Übersicht\n\n" ..
@@ -57,11 +57,15 @@ local APP_HEADERS = {
 -- The URL is placed first so it is always visible without scrolling.
 -- It leads to a step-by-step guide with a one-click copy button and bookmarklet.
 local SETUP_HELP =
-  "Die Anleitung wurde in deinem Browser geoeffnet.\n\n" ..
-  "Folge den Schritten dort, kopiere den Token\n" ..
-  "und fuege ihn hier ein: Cmd+V\n\n" ..
-  "Falls kein Browser aufgegangen ist:\n" ..
-  SETUP_URL
+  "Anleitung (mit Kopier-Button):\n" ..
+  SETUP_URL .. "\n\n" ..
+  "Oder direkt in Chrome:\n" ..
+  "1. app.klarna.com oeffnen (eingeloggt)\n" ..
+  "2. Konsole: Cmd+Alt+J\n" ..
+  "3. Eingeben: copy(localStorage\n" ..
+  "   ['@KLAPP:signIn:refreshToken'])\n" ..
+  "4. Token ist in der Zwischenablage\n" ..
+  "5. Hier einfuegen: Cmd+V"
 
 local RENEW_HELP =
   "Dein Klarna-Token ist abgelaufen.\n\n" .. SETUP_HELP
@@ -275,7 +279,6 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
         return "Klarna: Token abgelaufen. Bitte MoneyMoney in den " ..
                "Vordergrund bringen und Konto erneut aktualisieren."
       end
-      os.execute("open '" .. SETUP_URL .. "'")
       return {
         title     = "Klarna: Token erneuern",
         challenge = RENEW_HELP,
@@ -288,7 +291,6 @@ function InitializeSession2(protocol, bankCode, step, credentials, interactive)
       return "Klarna: Bitte MoneyMoney in den Vordergrund bringen und " ..
              "Konto erneut aktualisieren."
     end
-    os.execute("open '" .. SETUP_URL .. "'")
     return {
       title     = "Klarna einrichten",
       challenge = SETUP_HELP,
